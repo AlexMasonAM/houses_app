@@ -31,9 +31,31 @@
         map: map
     });
 
-    makeMarker(34.05, -118.45);
-  }
+    <% @houses.each do |house|  %>
+      makeMarker(<%= house.latitude %>, <%= house.longitude %>);
+    <% end %>
 
-  google.maps.event.addDomListener(window, 'load', initialize);
+    makeMarker(34.05, -118.45);
+
+    google.maps.event.addListener(map, 'click', function(event){ 
+      makeMarker(event.latLng.k,event.latLng.D);
+      createHouse(event.latLng.k,event.latLng.D); 
+    });
+
+    function createHouse(lat, lng) {
+      $.ajax
+      ({
+        type: "POST",
+        datatype: "json",
+        url: "/houses",
+        data: { house: { latitude: lat, longitude: lng} }
+      });
+    }
+    
+  }
+   google.maps.event.addDomListener(window, 'load', initialize);
+ 
+  
+
 
   </script>
